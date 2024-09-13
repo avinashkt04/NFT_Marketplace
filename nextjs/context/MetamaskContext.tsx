@@ -1,7 +1,7 @@
 "use client";
 
 import { ethers } from "ethers";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { set } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -32,7 +32,7 @@ export const MetamaskProvider: React.FC<{ children: React.ReactNode }> = ({
       console.log("No ethereum provider");
       return;
     } else {
-      const providerInstance = new ethers.BrowserProvider(window.ethereum);
+      const providerInstance = new ethers.BrowserProvider(window.ethereum as any);
       const signerInstance = await providerInstance.getSigner();
       const chainId = await providerInstance
         .getNetwork()
@@ -73,6 +73,7 @@ export const MetamaskProvider: React.FC<{ children: React.ReactNode }> = ({
 export const useMetaMask = () => {
   const context = useContext(MetamaskContext);
   if (!context) {
+    console.log("UseMetamask must be within a MetamaskProvider");
     throw new Error("useMetaMask must be used within a MetaMaskProvider");
   }
   return context;

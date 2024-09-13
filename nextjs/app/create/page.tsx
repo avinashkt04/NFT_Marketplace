@@ -83,6 +83,8 @@ export default function CreatePage() {
         await tx.wait();
       } catch (error) {
         console.error("Error creating NFT:", error);
+        reset();
+        handleDelete();
         toast.error("Transaction failed");
       }
     } catch (error) {

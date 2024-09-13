@@ -45,14 +45,17 @@ export default function MarketplacePage() {
     try {
       setIsLoading(true);
       const response = await axios.get("/api/database-fetch");
+      console.log(response.data);
       let nftData: Nft[] = [];
-
+  
       for (let nft of response.data?.data) {
         const ipfsHash = nft.tokenUri.replace("ipfs://", "");
-        const tokenUriURL = `https://ipfs.io/ipfs/${ipfsHash}`;
-
+        const tokenUriURL = `https://black-blank-snipe-168.mypinata.cloud/ipfs/${ipfsHash}`;
+  
         try {
           const tokenUriResponse = await axios.get(tokenUriURL);
+          console.log(`Token URI Response: ${JSON.stringify(tokenUriResponse.data)}`);
+  
           nftData.push({
             tokenUri: nft.tokenUri,
             name: tokenUriResponse?.data.name,
@@ -62,16 +65,17 @@ export default function MarketplacePage() {
             owner: nft.owner,
             chainId: nft.chainId,
             status: nft.status,
-            price: nft.price,
+            price: nft?.price,
           });
         } catch (error) {
           console.error("Error fetching token URI:", error);
         }
       }
       setNfts(nftData);
-      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching NFT data:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -215,7 +219,7 @@ export default function MarketplacePage() {
 
           await axios.post("/api/database-update", JSON.stringify(data));
           await fetchData();
-          toast.success("NFT listing canceled successfully");
+          toast.success("NFT listing cancelled successfully");
           onClose();
         });
 
@@ -226,15 +230,17 @@ export default function MarketplacePage() {
         const tx = await contract.cancelListing(nft, tokenIdBigInt);
         await tx.wait();
       } catch (error) {
-        console.error("Error canceling NFT:", error);
+        console.error("Error cancelling NFT:", error);
         toast.error("Transaction failed");
+      } finally {
+        setIsLoading(false);
       }
     }
   };
 
   const filteredNfts = nfts
-    .filter((nft) => chainId?.toString() === nft.chainId)
-    .filter((nft) => nft.status === "listed");
+  .filter((nft) => chainId?.toString() === nft.chainId && nft.status === "listed")
+  .sort((a, b) => Number(a.tokenId) - Number(b.tokenId));
 
   return (
     <div className="px-4">
