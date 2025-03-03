@@ -51,7 +51,7 @@ export default function MarketplacePage() {
     try {
       setIsLoading(true);
       const response = await axios.get("/api/database-fetch");
-      console.log(response.data);
+      // console.log(response.data);
       let nftData: Nft[] = [];
 
       for (let nft of response.data?.data) {
@@ -60,9 +60,9 @@ export default function MarketplacePage() {
 
         try {
           const tokenUriResponse = await axios.get(tokenUriURL);
-          console.log(
-            `Token URI Response: ${JSON.stringify(tokenUriResponse.data)}`,
-          );
+          // console.log(
+          //   `Token URI Response: ${JSON.stringify(tokenUriResponse.data)}`,
+          // );
 
           nftData.push({
             tokenUri: nft.tokenUri,
@@ -113,10 +113,10 @@ export default function MarketplacePage() {
         contract.once(
           "nftBought",
           async (seller, nftAddress, tokenId, price) => {
-            console.log(`NFT bought from ${seller}`);
-            console.log(`NFT Address: ${nftAddress}`);
-            console.log(`Token ID: ${tokenId}`);
-            console.log(`Price: ${price.toString()}`);
+            // console.log(`NFT bought from ${seller}`);
+            // console.log(`NFT Address: ${nftAddress}`);
+            // console.log(`Token ID: ${tokenId}`);
+            // console.log(`Price: ${price.toString()}`);
 
             const data = {
               tokenUri: selectedNft.tokenUri,
@@ -168,10 +168,10 @@ export default function MarketplacePage() {
         contract.once(
           "nftListed",
           async (owner, nftAddress, tokenId, price) => {
-            console.log("owner", owner);
-            console.log("nftAddress", nftAddress);
-            console.log("tokenId", tokenId.toString());
-            console.log("price", ethers.formatEther(price.toString()));
+            // console.log("owner", owner);
+            // console.log("nftAddress", nftAddress);
+            // console.log("tokenId", tokenId.toString());
+            // console.log("price", ethers.formatEther(price.toString()));
             const data = {
               tokenUri: selectedNft.tokenUri,
               tokenId: tokenId.toString(),
@@ -213,9 +213,9 @@ export default function MarketplacePage() {
         const contract = new ethers.Contract(nftMarket, nftMarketAbi, signer);
 
         contract.once("nftCancelled", async (owner, nftAddress, tokenId) => {
-          console.log("owner", owner);
-          console.log("nftAddress", nftAddress);
-          console.log("tokenId", tokenId.toString());
+          // console.log("owner", owner);
+          // console.log("nftAddress", nftAddress);
+          // console.log("tokenId", tokenId.toString());
           const data = {
             tokenUri: selectedNft.tokenUri,
             tokenId: tokenId.toString(),

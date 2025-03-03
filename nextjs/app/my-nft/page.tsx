@@ -53,7 +53,7 @@ export default function MyNftPage() {
     try {
       setIsLoading(true);
       const response = await axios.get("/api/database-fetch");
-      console.log(response.data);
+      // console.log(response.data);
       let nftData: Nft[] = [];
 
       for (let nft of response.data?.data) {
@@ -62,9 +62,9 @@ export default function MyNftPage() {
 
         try {
           const tokenUriResponse = await axios.get(tokenUriURL);
-          console.log(
-            `Token URI Response: ${JSON.stringify(tokenUriResponse.data)}`,
-          );
+          // console.log(
+          //   `Token URI Response: ${JSON.stringify(tokenUriResponse.data)}`,
+          // );
 
           nftData.push({
             tokenUri: nft.tokenUri,
@@ -90,7 +90,7 @@ export default function MyNftPage() {
   };
 
   const handleAction = (nft: Nft) => {
-    console.log(`price: ${nft.price}`);
+    // console.log(`price: ${nft.price}`);
     setSelectedNft(nft);
     setPrice(nft.price || "");
     onOpen();
@@ -98,7 +98,7 @@ export default function MyNftPage() {
 
   const handleSellNft = async () => {
     if (selectedNft && price) {
-      console.log(selectedNft);
+      // console.log(selectedNft);
       try {
         setIsLoading(true);
         const nftMarket =
@@ -110,10 +110,10 @@ export default function MyNftPage() {
         contract.once(
           "nftListed",
           async (owner, nftAddress, tokenId, price) => {
-            console.log("owner", owner);
-            console.log("nftAddress", nftAddress);
-            console.log("tokenId", tokenId.toString());
-            console.log("price", ethers.formatEther(price.toString()));
+            // console.log("owner", owner);
+            // console.log("nftAddress", nftAddress);
+            // console.log("tokenId", tokenId.toString());
+            // console.log("price", ethers.formatEther(price.toString()));
             const data = {
               tokenUri: selectedNft.tokenUri,
               tokenId: tokenId.toString(),
@@ -169,10 +169,10 @@ export default function MyNftPage() {
         contract.once(
           "nftListed",
           async (owner, nftAddress, tokenId, price) => {
-            console.log("owner", owner);
-            console.log("nftAddress", nftAddress);
-            console.log("tokenId", tokenId.toString());
-            console.log("price", ethers.formatEther(price.toString()));
+            // console.log("owner", owner);
+            // console.log("nftAddress", nftAddress);
+            // console.log("tokenId", tokenId.toString());
+            // console.log("price", ethers.formatEther(price.toString()));
             const data = {
               tokenUri: selectedNft.tokenUri,
               tokenId: tokenId.toString(),

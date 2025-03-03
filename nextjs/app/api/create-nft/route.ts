@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     const bytes = await image.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const tmpDir = resolve("./public/temp");
+    const tmpDir = '/tmp';
     await mkdir(tmpDir, { recursive: true });
 
     const path = join(tmpDir, image.name);
