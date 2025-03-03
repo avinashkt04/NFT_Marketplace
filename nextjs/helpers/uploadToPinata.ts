@@ -1,6 +1,7 @@
-import pinataSDK, { PinataPinResponse } from "@pinata/sdk";
-import path from "path";
 import fs from "fs";
+import path from "path";
+
+import pinataSDK, { PinataPinResponse } from "@pinata/sdk";
 
 const pinataApiKey: string = process.env.PINATA_API_KEY!;
 const pinataSecretApiKey: string = process.env.PINATA_SECRET_API_KEY!;
@@ -13,7 +14,7 @@ type PinataPinResponseType = {
 };
 
 export async function storeImage(
-  imageFilePath: string
+  imageFilePath: string,
 ): Promise<PinataPinResponseType> {
   console.log(`Image file path: ${imageFilePath}`);
   const fullImagePath: string = path.resolve(imageFilePath);
@@ -26,7 +27,7 @@ export async function storeImage(
   for (const file of files) {
     console.log(`Uploading file - ${file}`);
     const readableStreamForFile = fs.createReadStream(
-      `${fullImagePath}/${file}`
+      `${fullImagePath}/${file}`,
     );
 
     try {
@@ -46,7 +47,7 @@ export async function storeImage(
 }
 
 export async function storeTokenURIMetadata(
-  metadata: any
+  metadata: any,
 ): Promise<PinataPinResponse | undefined> {
   try {
     const response = await pinata.pinJSONToIPFS(metadata);

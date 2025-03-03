@@ -9,9 +9,7 @@ export default function BlogLayout({
 }) {
   return (
     <RequireWalletProvider>
-      <section className="py-8 md:py-10">
-        {children}
-      </section>
+      <section className="py-8 md:py-10">{children}</section>
     </RequireWalletProvider>
   );
 }

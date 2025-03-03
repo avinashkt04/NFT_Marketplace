@@ -1,8 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+
 import { Button, Tooltip } from "@nextui-org/react";
+
 import { useMetaMask } from "@/context/MetamaskContext";
+
 
 export const ConnectWallet = () => {
   const [userAddress, setUserAddress] = useState<string | null>(null);

@@ -1,17 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
+
+import { useMetaMask } from "@/context/MetamaskContext";
+
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  Image,
   Button,
+  Card,
+  CardBody,
   CardFooter,
+  CardHeader,
+  Image,
   Tooltip,
 } from "@nextui-org/react";
-import { useMetaMask } from "@/context/MetamaskContext";
-import { ethers } from "ethers";
+
 
 export default function NftCard({
   name,

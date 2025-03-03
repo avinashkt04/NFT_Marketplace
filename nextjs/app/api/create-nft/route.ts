@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { join, resolve } from "path";
-import { writeFile, mkdir } from "fs/promises";
-import { storeImage, storeTokenURIMetadata } from "@/helpers/uploadToPinata";
 import { unlink } from "fs";
+import { writeFile, mkdir } from "fs/promises";
+import { join, resolve } from "path";
+
+import { storeImage, storeTokenURIMetadata } from "@/helpers/uploadToPinata";
 
 const metadataTemplate = {
   name: "",
@@ -21,7 +22,7 @@ export async function POST(request: NextRequest) {
   if (!image) {
     return NextResponse.json(
       { success: false, message: "No image file provided" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -35,7 +36,7 @@ export async function POST(request: NextRequest) {
     await mkdir(tmpDir, { recursive: true });
 
     const path = join(tmpDir, image.name);
-    await writeFile(path, buffer);
+    await writeFile(path, buffer as any);
 
     const tokenUri = await handleTokenUris(tmpDir, name, description);
     await unlink(path, (err) => {
@@ -51,7 +52,7 @@ export async function POST(request: NextRequest) {
     console.error("Error handling file upload:", error);
     return NextResponse.json(
       { success: false, message: "Error handling file upload" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -59,13 +60,12 @@ export async function POST(request: NextRequest) {
 async function handleTokenUris(
   imagesLocation: string,
   name: string,
-  description: string
+  description: string,
 ): Promise<string> {
   const { responses: imageUploadResponses, files } =
     await storeImage(imagesLocation);
 
   const imageUploadResponse = imageUploadResponses[0];
-  const file = files[0];
 
   let tokenUriMetadata = { ...metadataTemplate };
   tokenUriMetadata.name = name;

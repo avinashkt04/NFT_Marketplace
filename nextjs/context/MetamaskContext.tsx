@@ -1,7 +1,9 @@
 "use client";
 
+import React, { createContext, useContext, useEffect, useState } from "react";
+
 import { ethers } from "ethers";
-import React, { createContext, useContext, useState } from "react";
+
 import { toast } from "react-toastify";
 
 type MetamaskContextType = {
@@ -14,7 +16,7 @@ type MetamaskContextType = {
 };
 
 const MetamaskContext = createContext<MetamaskContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const MetamaskProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -26,54 +28,51 @@ export const MetamaskProvider: React.FC<{ children: React.ReactNode }> = ({
   const [chainId, setChainId] = useState<number | null>(null);
   const [address, setAddress] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.ethereum) {
+      setProvider(new ethers.BrowserProvider(window.ethereum as any));
+    }
+  }, []);
+
   const connectWallet = async () => {
-    if (typeof window === "undefined" || window.ethereum == null) {
+    if (typeof window === "undefined" || !window.ethereum) {
       console.log("No ethereum provider");
       return;
-    } else {
-      const providerInstance = new ethers.BrowserProvider(window.ethereum as any);
-      const signerInstance = await providerInstance.getSigner();
-      const chainId = await providerInstance
-        .getNetwork()
-        .then((network) => network.chainId);
-      const address = await signerInstance.getAddress();
-
-      setProvider(providerInstance);
-      setSigner(signerInstance);
-      setIsConnected(true);
-      setChainId(Number(chainId));
-      setAddress(address);
-      toast.success(
-        chainId?.toString() === "31337"
-          ? "Hardhat Network Detected"
-          : "Sepolia Network Detected"
-      );
     }
+
+    const providerInstance = new ethers.BrowserProvider(window.ethereum as any);
+    const signerInstance = await providerInstance.getSigner();
+    const chainId = await providerInstance
+      .getNetwork()
+      .then((network) => network.chainId);
+    const address = await signerInstance.getAddress();
+
+    setProvider(providerInstance);
+    setSigner(signerInstance);
+    setIsConnected(true);
+    setChainId(Number(chainId));
+    setAddress(address);
+
+    toast.success(
+      chainId?.toString() === "31337"
+        ? "Hardhat Network Detected"
+        : "Sepolia Network Detected",
+    );
   };
 
   return (
-    <div>
-      <MetamaskContext.Provider
-        value={{
-          provider,
-          address,
-          connectWallet,
-          isConnected,
-          chainId,
-          signer,
-        }}
-      >
-        {children}
-      </MetamaskContext.Provider>
-    </div>
+    <MetamaskContext.Provider
+      value={{ provider, address, connectWallet, isConnected, chainId, signer }}
+    >
+      {children}
+    </MetamaskContext.Provider>
   );
 };
 
 export const useMetaMask = () => {
   const context = useContext(MetamaskContext);
   if (!context) {
-    console.log("UseMetamask must be within a MetamaskProvider");
-    throw new Error("useMetaMask must be used within a MetaMaskProvider");
+    throw new Error("useMetaMask must be used within a MetamaskProvider");
   }
   return context;
 };

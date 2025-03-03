@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+
 import axios from "axios";
-import NftCard from "@/components/NftCard";
-import { useMetaMask } from "@/context/MetamaskContext";
+import { toast } from "react-toastify";
+import { ethers } from "ethers";
+
 import { Button } from "@nextui-org/button";
 import {
   Modal,
@@ -12,13 +14,17 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@nextui-org/react";
-import { ethers } from "ethers";
+
+import { useMetaMask } from "@/context/MetamaskContext";
+
 import nftMarketAddress from "@/constants/nftMarketAddress.json";
 import nftMarketAbi from "@/constants/nftMarketAbi.json";
 import nftAddress from "@/constants/nftAddress.json";
 import nftAbi from "@/constants/nftAbi.json";
-import { toast } from "react-toastify";
+
+import NftCard from "@/components/NftCard";
 import { SkeletonComponent } from "@/components/Skeleton";
+
 
 type Nft = {
   tokenUri: string;
@@ -57,7 +63,7 @@ export default function MyNftPage() {
         try {
           const tokenUriResponse = await axios.get(tokenUriURL);
           console.log(
-            `Token URI Response: ${JSON.stringify(tokenUriResponse.data)}`
+            `Token URI Response: ${JSON.stringify(tokenUriResponse.data)}`,
           );
 
           nftData.push({
@@ -120,7 +126,7 @@ export default function MyNftPage() {
             toast.success("NFT listed successfully");
             await fetchData();
             onClose();
-          }
+          },
         );
 
         const nftAdd =
@@ -134,7 +140,7 @@ export default function MyNftPage() {
         const tx = await contract.listNft(
           nftAdd,
           tokenIdBigInt,
-          ethers.parseEther(price)
+          ethers.parseEther(price),
         );
         await tx.wait();
       } catch (error) {
@@ -179,13 +185,13 @@ export default function MyNftPage() {
             toast.success("NFT updated successfully");
             await fetchData();
             onClose();
-          }
+          },
         );
 
         const tx = await contract.updateListing(
           nft,
           tokenIdBigInt,
-          ethers.parseEther(price)
+          ethers.parseEther(price),
         );
         await tx.wait();
       } catch (error) {
@@ -364,7 +370,7 @@ export default function MyNftPage() {
                   <img
                     src={`https://ipfs.io/ipfs/${selectedNft.image.replace(
                       "ipfs://",
-                      ""
+                      "",
                     )}`}
                     alt={selectedNft.name}
                     className="w-full h-40 object-cover rounded-lg mb-4"

@@ -1,9 +1,12 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 import { ConnectWallet } from "./ConnectWallet";
+
 
 type NavbarMenuLinks = {
   label: string;

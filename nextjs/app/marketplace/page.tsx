@@ -1,7 +1,11 @@
 "use client";
 
-import NftCard from "@/components/NftCard";
-import { useMetaMask } from "@/context/MetamaskContext";
+import { useEffect, useState } from "react";
+
+import { toast } from "react-toastify";
+import axios from "axios";
+import { ethers } from "ethers";
+
 import {
   Button,
   Modal,
@@ -10,14 +14,16 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@nextui-org/react";
-import axios from "axios";
-import { ethers } from "ethers";
-import { useEffect, useState } from "react";
+
+import { useMetaMask } from "@/context/MetamaskContext";
+
 import nftAddress from "@/constants/nftAddress.json";
 import nftMarketAddress from "@/constants/nftMarketAddress.json";
 import nftMarketAbi from "@/constants/nftMarketAbi.json";
-import { toast } from "react-toastify";
+
+import NftCard from "@/components/NftCard";
 import { SkeletonComponent } from "@/components/Skeleton";
+
 
 type Nft = {
   tokenUri: string;
@@ -47,15 +53,17 @@ export default function MarketplacePage() {
       const response = await axios.get("/api/database-fetch");
       console.log(response.data);
       let nftData: Nft[] = [];
-  
+
       for (let nft of response.data?.data) {
         const ipfsHash = nft.tokenUri.replace("ipfs://", "");
         const tokenUriURL = `https://black-blank-snipe-168.mypinata.cloud/ipfs/${ipfsHash}`;
-  
+
         try {
           const tokenUriResponse = await axios.get(tokenUriURL);
-          console.log(`Token URI Response: ${JSON.stringify(tokenUriResponse.data)}`);
-  
+          console.log(
+            `Token URI Response: ${JSON.stringify(tokenUriResponse.data)}`,
+          );
+
           nftData.push({
             tokenUri: nft.tokenUri,
             name: tokenUriResponse?.data.name,
@@ -122,7 +130,7 @@ export default function MarketplacePage() {
             await axios.post("/api/database-update", data);
             await fetchData();
             toast.success("NFT bought successfully");
-          }
+          },
         );
 
         const tokenIdBigInt = BigInt(selectedNft.tokenId);
@@ -176,13 +184,13 @@ export default function MarketplacePage() {
             await fetchData();
             toast.success("NFT updated successfully");
             onClose();
-          }
+          },
         );
 
         const tx = await contract.updateListing(
           nft,
           tokenIdBigInt,
-          ethers.parseEther(price)
+          ethers.parseEther(price),
         );
         await tx.wait();
       } catch (error) {
@@ -239,8 +247,10 @@ export default function MarketplacePage() {
   };
 
   const filteredNfts = nfts
-  .filter((nft) => chainId?.toString() === nft.chainId && nft.status === "listed")
-  .sort((a, b) => Number(a.tokenId) - Number(b.tokenId));
+    .filter(
+      (nft) => chainId?.toString() === nft.chainId && nft.status === "listed",
+    )
+    .sort((a, b) => Number(a.tokenId) - Number(b.tokenId));
 
   return (
     <div className="px-4">
@@ -286,7 +296,7 @@ export default function MarketplacePage() {
                 <img
                   src={`https://ipfs.io/ipfs/${selectedNft.image.replace(
                     "ipfs://",
-                    ""
+                    "",
                   )}`}
                   alt={selectedNft.name}
                   className="w-full h-40 object-cover rounded-lg mb-4"

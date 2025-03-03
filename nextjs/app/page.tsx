@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import Link from "next/link";
+import Image from "next/image";
+
 import {
   Button,
   Card,
@@ -9,7 +12,6 @@ import {
   CardFooter,
   CardHeader,
 } from "@nextui-org/react";
-import Image from "next/image";
 
 const featuredNfts = [
   {
