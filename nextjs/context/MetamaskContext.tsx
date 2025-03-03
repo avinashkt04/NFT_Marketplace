@@ -2,7 +2,6 @@
 
 import { ethers } from "ethers";
 import React, { createContext, useContext, useState } from "react";
-import { set } from "react-hook-form";
 import { toast } from "react-toastify";
 
 type MetamaskContextType = {
@@ -28,7 +27,7 @@ export const MetamaskProvider: React.FC<{ children: React.ReactNode }> = ({
   const [address, setAddress] = useState<string | null>(null);
 
   const connectWallet = async () => {
-    if (window.ethereum == null) {
+    if (typeof window === "undefined" || window.ethereum == null) {
       console.log("No ethereum provider");
       return;
     } else {
