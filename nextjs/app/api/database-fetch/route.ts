@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/helpers/dbConnect";
 import NFTModel from "@/model/NFT";
 
+export const dynamic = "force-static";
+
 export async function GET() {
   dbConnect();
   try {
@@ -13,13 +15,13 @@ export async function GET() {
         message: "Data fetched successfully",
         data: nftDocuments,
       },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
     console.log(error);
     return NextResponse.json(
       { success: false, message: "Error fetching data" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
