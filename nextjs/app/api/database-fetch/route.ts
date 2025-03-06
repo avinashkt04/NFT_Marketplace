@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/helpers/dbConnect";
 import NFTModel from "@/model/NFT";
 
-export const dynamic = "force-static";
+export const revalidate = 0;
 
 export async function GET() {
   dbConnect();
